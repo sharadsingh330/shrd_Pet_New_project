@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Filters are declared here (not with annotations) so their ORDER is guaranteed:
+  1. CORS  2. Authentication  3. Role authorization (admin area).
+  Servlets are registered with @WebServlet annotations.
+-->
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
+
+    <display-name>Pawlift API</display-name>
+
+    <filter>
+        <filter-name>CorsFilter</filter-name>
+        <filter-class>com.pawlift.filter.CorsFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CorsFilter</filter-name>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>AuthenticationFilter</filter-name>
+        <filter-class>com.pawlift.filter.AuthenticationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthenticationFilter</filter-name>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>AdminRoleFilter</filter-name>
+        <filter-class>com.pawlift.filter.RoleAuthorizationFilter</filter-class>
+        <init-param>
+            <param-name>role</param-name>
+            <param-value>admin</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>AdminRoleFilter</filter-name>
+        <url-pattern>/api/admin/*</url-pattern>
+    </filter-mapping>
+
+    <session-config>
+        <session-timeout>60</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+</web-app>
